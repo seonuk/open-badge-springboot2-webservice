@@ -8,6 +8,5 @@ class Application
 
 fun main(args: Array<String>) {
     runApplication<Application>(*args)
-    println("hello")
 
 }
