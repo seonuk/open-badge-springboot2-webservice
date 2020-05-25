@@ -3,10 +3,10 @@ package edu.dongguk.openBadge.repository
 import edu.dongguk.openBadge.DTOS.CurriculumDTO
 import javax.persistence.*
 
-@Entity
+@Entity(name = "curriculum")
 class Curriculum(
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long? = null,
         @Column(length = 500, nullable = false)
         var subject: String,

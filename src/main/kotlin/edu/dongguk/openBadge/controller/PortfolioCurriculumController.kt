@@ -4,8 +4,6 @@ import edu.dongguk.openBadge.DTOS.CurriculumDTO
 import edu.dongguk.openBadge.repository.Curriculum
 import edu.dongguk.openBadge.service.PortfolioCurriculumService
 import org.springframework.web.bind.annotation.*
-import java.util.*
-import javax.persistence.Id
 
 @RestController
 @RequestMapping("/api/portfolio/curri")
@@ -13,27 +11,23 @@ class PortfolioCurriculumController(
         private val portfolioCurriculumService: PortfolioCurriculumService
 ) {
 
-    @GetMapping("/get")
+    @GetMapping("")
     fun getAllCurriculum(
-    ) : List<Curriculum> {
-        return portfolioCurriculumService.getCurriculumActivities()
-    }
+    ) : List<Curriculum> = portfolioCurriculumService.getCurriculumActivities()
+
 
     @GetMapping("/get/{curriculumId}")
     fun getOneCurriculum(
             @PathVariable
             curriculumId: Long
-    ) : Curriculum? {
-        return portfolioCurriculumService.getOne(curriculumId)
-    }
+    ) : Curriculum? = portfolioCurriculumService.getOne(curriculumId)
+
 
     @PostMapping("/create")
     fun postCurriculum(
             @RequestBody
             curriculum: Curriculum
-    ) : Curriculum {
-        return portfolioCurriculumService.postCurriculumActivity(curriculum)
-    }
+    ) : Curriculum = portfolioCurriculumService.postCurriculumActivity(curriculum)
 
     @PutMapping("/create/{curriculumId}")
     fun modifyCurriculum(
@@ -41,17 +35,13 @@ class PortfolioCurriculumController(
             curriculumId: Long,
             @RequestBody
             curriculum: CurriculumDTO
-    ) : Curriculum? {
-        return portfolioCurriculumService.modifyCurriculumActivity(curriculumId, curriculum)
-    }
+    ) : Curriculum? = portfolioCurriculumService.modifyCurriculumActivity(curriculumId, curriculum)
 
     @DeleteMapping("/delete/{curriculumId}")
-    fun delelteCurriculm(
+    fun deleteCurriculum(
             @PathVariable
             curriculumId: Long
-    ) : Unit {
-        return portfolioCurriculumService.deleteCurriculumActivity(curriculumId)
-    }
+    ) : Unit = portfolioCurriculumService.deleteCurriculumActivity(curriculumId)
 
 
 }
