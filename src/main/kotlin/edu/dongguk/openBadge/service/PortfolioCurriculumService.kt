@@ -12,33 +12,23 @@ import java.util.*
 class PortfolioCurriculumService(
         private val curriculumRepository: CurriculumRepository
 ) {
-    fun getCurriculumActivities(): List<Curriculum> {
-        return curriculumRepository.findAll()
-    }
+    fun getCurriculumActivities(): List<Curriculum> = curriculumRepository.findAll()
 
-    fun postCurriculumActivity(curriculum: Curriculum): Curriculum {
-        return curriculumRepository.save(curriculum)
-    }
+    fun postCurriculumActivity(curriculum: Curriculum): Curriculum = curriculumRepository.save(curriculum)
 
     fun getOne(
             curriculumId: Long
-    ): Curriculum? {
+    ): Curriculum? = curriculumRepository.findByIdOrNull(curriculumId)
 
-        return curriculumRepository.findByIdOrNull(curriculumId)
 
-    }
 
     @Transactional
     fun modifyCurriculumActivity(curriculumId: Long, curriculum: CurriculumDTO): Curriculum? {
         val c: Curriculum? = curriculumRepository.findByIdOrNull(curriculumId)
 
         return c?.update(curriculum)
-
-
     }
 
-    fun deleteCurriculumActivity(curriculumId: Long): Unit {
-        return curriculumRepository.deleteById(curriculumId)
-    }
+    fun deleteCurriculumActivity(curriculumId: Long): Unit = curriculumRepository.deleteById(curriculumId)
 
 }
