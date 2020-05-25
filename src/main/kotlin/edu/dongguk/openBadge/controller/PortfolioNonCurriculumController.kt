@@ -27,13 +27,17 @@ class PortfolioNonCurriculumController(
                 nonCurriculumDTO: NonCurriculumDTO
         ): NonCurriculum = nonCurriculumService.postNonCurriculumActivity(nonCurriculumDTO)
 
-        @PutMapping("/create/{noncurriculumId}")
+        @PutMapping("/modify/{nonCurriculumId}")
         fun modifyNonCurriculum(
                 @PathVariable
                 nonCurriculumId: Long,
-                @RequestBody
                 nonCurriculumDTO: NonCurriculumDTO
         ): NonCurriculum? = nonCurriculumService.modifyNonCurriculumActivity(nonCurriculumId, nonCurriculumDTO)
 
+        @DeleteMapping("/delete/{nonCurriculumId}")
+        fun deleteNonCurriculum(
+                @PathVariable
+                nonCurriculumId: Long
+        ): Unit = nonCurriculumService.deleteNonCurriculumActivity(nonCurriculumId)
 
 }

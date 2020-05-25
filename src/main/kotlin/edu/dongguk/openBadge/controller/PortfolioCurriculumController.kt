@@ -16,7 +16,7 @@ class PortfolioCurriculumController(
     ) : List<Curriculum> = portfolioCurriculumService.getCurriculumActivities()
 
 
-    @GetMapping("/get/{curriculumId}")
+    @GetMapping("/{curriculumId}")
     fun getOneCurriculum(
             @PathVariable
             curriculumId: Long

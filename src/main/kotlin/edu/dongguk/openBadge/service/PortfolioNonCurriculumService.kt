@@ -30,7 +30,7 @@ class PortfolioNonCurriculumService(
 
         return nonCurriculumRepository.save(nonCurriculumDTO.toEntity())
     }
-    fun getOne(nonCurriculumId: Long): NonCurriculum? = nonCurriculumRepository.getOne(nonCurriculumId)
+    fun getOne(nonCurriculumId: Long): NonCurriculum? = nonCurriculumRepository.findByIdOrNull(nonCurriculumId)
 
     @Transactional
     fun modifyNonCurriculumActivity(nonCurriculumId: Long, nonCurriculumDTO: NonCurriculumDTO): NonCurriculum? {
@@ -38,6 +38,8 @@ class PortfolioNonCurriculumService(
 
         return c?.update(nonCurriculumDTO)
     }
+
+    fun deleteNonCurriculumActivity(nonCurriculumId: Long) = nonCurriculumRepository.deleteById(nonCurriculumId)
 
 
 }
