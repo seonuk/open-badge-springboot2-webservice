@@ -5,6 +5,7 @@ import edu.dongguk.openBadge.repository.NonCurriculum
 import edu.dongguk.openBadge.service.PortfolioCurriculumService
 import edu.dongguk.openBadge.service.PortfolioNonCurriculumService
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 
 @RestController
@@ -23,9 +24,8 @@ class PortfolioNonCurriculumController(
 
         @PostMapping("/create")
         fun postNoncurriculumActivity(
-                @RequestBody
-                nonCurriculum: NonCurriculum
-        ): NonCurriculum = nonCurriculumService.postNonCurriculumActivity(nonCurriculum)
+                nonCurriculumDTO: NonCurriculumDTO
+        ): NonCurriculum = nonCurriculumService.postNonCurriculumActivity(nonCurriculumDTO)
 
         @PutMapping("/create/{noncurriculumId}")
         fun modifyNonCurriculum(

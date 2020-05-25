@@ -6,6 +6,8 @@ import edu.dongguk.openBadge.repository.NonCurriculumRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
 
 @Service
 class PortfolioNonCurriculumService(
@@ -14,9 +16,20 @@ class PortfolioNonCurriculumService(
     fun getNonCurriculumActivities(): List<NonCurriculum> = nonCurriculumRepository.findAll()
 
     fun postNonCurriculumActivity(
-            nonCurriculum: NonCurriculum
-    ): NonCurriculum = nonCurriculumRepository.save(nonCurriculum)
+            nonCurriculumDTO: NonCurriculumDTO
+    ): NonCurriculum {
 
+        if (!nonCurriculumDTO.files.isNullOrEmpty()) {
+            for (file in nonCurriculumDTO.files!!) {
+                val fileName: String? = file.originalFilename
+                file.transferTo(File("/Users/seonuk/Downloads/openBadge/src/main/resources/files/$fileName"))
+                // file save
+                println("file upload")
+            }
+        }
+
+        return nonCurriculumRepository.save(nonCurriculumDTO.toEntity())
+    }
     fun getOne(nonCurriculumId: Long): NonCurriculum? = nonCurriculumRepository.getOne(nonCurriculumId)
 
     @Transactional
