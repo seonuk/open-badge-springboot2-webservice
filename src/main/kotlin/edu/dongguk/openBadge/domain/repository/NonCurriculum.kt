@@ -1,4 +1,4 @@
-package edu.dongguk.openBadge.repository
+package edu.dongguk.openBadge.domain.repository
 
 import edu.dongguk.openBadge.DTOS.NonCurriculumDTO
 import javax.persistence.*
@@ -56,5 +56,6 @@ class NonCurriculum(
 
         return this
     }
+
 
 }

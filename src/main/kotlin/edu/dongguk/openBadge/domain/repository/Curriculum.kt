@@ -1,4 +1,4 @@
-package edu.dongguk.openBadge.repository
+package edu.dongguk.openBadge.domain.repository
 
 import edu.dongguk.openBadge.DTOS.CurriculumDTO
 import javax.persistence.*
@@ -13,7 +13,7 @@ class Curriculum(
         @Column(nullable = false)
         var grade: String,
         @Column(nullable = false)
-        var capability: Int,
+        var capability: String,
         @Column(nullable = false)
         var necessary: String,
         @Column(nullable = false)
