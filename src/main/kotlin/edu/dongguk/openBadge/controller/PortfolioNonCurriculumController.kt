@@ -1,11 +1,9 @@
 package edu.dongguk.openBadge.controller
 
 import edu.dongguk.openBadge.DTOS.NonCurriculumDTO
-import edu.dongguk.openBadge.repository.NonCurriculum
-import edu.dongguk.openBadge.service.PortfolioCurriculumService
+import edu.dongguk.openBadge.domain.repository.NonCurriculum
 import edu.dongguk.openBadge.service.PortfolioNonCurriculumService
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 
 @RestController
@@ -23,7 +21,7 @@ class PortfolioNonCurriculumController(
         ): NonCurriculum? = nonCurriculumService.getOne(nonCurriculumId)
 
         @PostMapping("/create")
-        fun postNoncurriculumActivity(
+        fun createNoncurriculumActivity(
                 nonCurriculumDTO: NonCurriculumDTO
         ): NonCurriculum = nonCurriculumService.postNonCurriculumActivity(nonCurriculumDTO)
 

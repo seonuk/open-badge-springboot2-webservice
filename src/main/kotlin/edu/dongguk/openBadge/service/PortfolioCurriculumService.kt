@@ -1,12 +1,11 @@
 package edu.dongguk.openBadge.service
 
 import edu.dongguk.openBadge.DTOS.CurriculumDTO
-import edu.dongguk.openBadge.repository.Curriculum
-import edu.dongguk.openBadge.repository.CurriculumRepository
+import edu.dongguk.openBadge.domain.repository.Curriculum
+import edu.dongguk.openBadge.domain.repository.CurriculumRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 @Service
 class PortfolioCurriculumService(

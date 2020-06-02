@@ -1,4 +1,4 @@
-package edu.dongguk.openBadge.repository
+package edu.dongguk.openBadge.domain.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 

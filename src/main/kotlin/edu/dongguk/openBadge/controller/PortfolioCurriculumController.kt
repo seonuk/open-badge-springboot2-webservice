@@ -1,7 +1,7 @@
 package edu.dongguk.openBadge.controller
 
 import edu.dongguk.openBadge.DTOS.CurriculumDTO
-import edu.dongguk.openBadge.repository.Curriculum
+import edu.dongguk.openBadge.domain.repository.Curriculum
 import edu.dongguk.openBadge.service.PortfolioCurriculumService
 import org.springframework.web.bind.annotation.*
 
@@ -24,7 +24,7 @@ class PortfolioCurriculumController(
 
 
     @PostMapping("/create")
-    fun postCurriculum(
+    fun createCurriculum(
             @RequestBody
             curriculum: Curriculum
     ) : Curriculum = portfolioCurriculumService.postCurriculumActivity(curriculum)
