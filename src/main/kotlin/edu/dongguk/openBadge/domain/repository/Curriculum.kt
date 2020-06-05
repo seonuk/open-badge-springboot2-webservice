@@ -1,5 +1,6 @@
 package edu.dongguk.openBadge.domain.repository
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import edu.dongguk.openBadge.DTOS.CurriculumDTO
 import javax.persistence.*
 
@@ -19,8 +20,18 @@ class Curriculum(
         @Column(nullable = false)
         var level: String,
         @Column(nullable = false)
-        var year: Int
+        var year: Int,
+        @ManyToOne
+        @JoinColumn(name = "user_id")
+        @JsonBackReference
+        var user: Member? = null
+
 ) {
+        fun mappingUser(user: Member?): Unit {
+                this.user = user
+        }
+
+
         fun update(curriculum: CurriculumDTO): Curriculum {
                 if (curriculum.subject != null)
                         this.subject = curriculum.subject

@@ -1,19 +1,29 @@
 package edu.dongguk.openBadge.controller
 
 import edu.dongguk.openBadge.DTOS.CurriculumDTO
+import edu.dongguk.openBadge.domain.repository.CustomUser
 import edu.dongguk.openBadge.domain.repository.Curriculum
 import edu.dongguk.openBadge.service.PortfolioCurriculumService
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import java.nio.file.Path
+import java.nio.file.Paths
+import javax.servlet.ServletContext
 
 @RestController
 @RequestMapping("/api/portfolio/curri")
 class PortfolioCurriculumController(
-        private val portfolioCurriculumService: PortfolioCurriculumService
+        private val portfolioCurriculumService: PortfolioCurriculumService,
+        val servletContext: ServletContext
 ) {
 
     @GetMapping("")
     fun getAllCurriculum(
-    ) : List<Curriculum> = portfolioCurriculumService.getCurriculumActivities()
+    ) : List<Curriculum> {
+
+
+        return  portfolioCurriculumService.getCurriculumActivities()
+    }
 
 
     @GetMapping("/{curriculumId}")
@@ -26,10 +36,12 @@ class PortfolioCurriculumController(
     @PostMapping("/create")
     fun createCurriculum(
             @RequestBody
-            curriculum: Curriculum
-    ) : Curriculum = portfolioCurriculumService.postCurriculumActivity(curriculum)
+            curriculum: Curriculum,
+            @AuthenticationPrincipal
+            customUser: CustomUser
+    ) : Long? = portfolioCurriculumService.postCurriculumActivity(curriculum, customUser)
 
-    @PutMapping("/create/{curriculumId}")
+    @PutMapping("/modify/{curriculumId}")
     fun modifyCurriculum(
             @PathVariable
             curriculumId: Long,

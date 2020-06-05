@@ -1,5 +1,6 @@
 package edu.dongguk.openBadge.domain.repository
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import edu.dongguk.openBadge.DTOS.NonCurriculumDTO
 import javax.persistence.*
 
@@ -36,8 +37,19 @@ class NonCurriculum(
         @Column(nullable = false)
         var program_level: Int,
         @Column(nullable = false)
-        var self_evaluation: Int
+        var self_evaluation: Int,
+        @ManyToOne
+        @JoinColumn(name="user_id")
+        @JsonBackReference
+        var user: Member? = null
 ) {
+
+    fun mappingUser(user: Member?) {
+
+        //null 일 경우 member를 못 불러온 경우로 예외 처
+
+        this.user = user
+    }
     fun update(noncurriculumDTO: NonCurriculumDTO): NonCurriculum {
         this.capability = noncurriculumDTO.capability
         this.activityName = noncurriculumDTO.activityName

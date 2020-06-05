@@ -1,12 +1,12 @@
 package edu.dongguk.openBadge.service
 
 import edu.dongguk.openBadge.DTOS.MemberDTO
+import edu.dongguk.openBadge.domain.repository.CustomUser
 import edu.dongguk.openBadge.domain.Role
 import edu.dongguk.openBadge.domain.repository.Member
 import edu.dongguk.openBadge.domain.repository.MemberRepository
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -44,32 +44,32 @@ class MemberService(
 
         return memberRepository.save(member).id
     }
-    override fun loadUserByUsername(studentId: String?): UserDetails {
-        val userEntityWrapper: Optional<Member> = memberRepository.findByStudentID(studentId)
-        val user: Member = userEntityWrapper.get()
+
+    override fun loadUserByUsername(studentId: String?): UserDetails{
+        val user: Member? = memberRepository.findByStudentID(studentId)
+
         val authorities: ArrayList<GrantedAuthority> = ArrayList<GrantedAuthority>()
 
         if ("admin@example.com" == studentId) {
             authorities.add(SimpleGrantedAuthority(Role.ADMIN.role))
         } else {
             authorities.add(SimpleGrantedAuthority(Role.MEMBER.role))
-
         }
 
-        return User(user.studentID,user.password, authorities)
+        return user?.let { CustomUser(
+                studentID = it.studentID,
+                pw = it.password,
+                authorities = authorities,
+                grade = it.grade,
+                name = it.name,
+                major = it.major
+        ) } ?: throw Exception()
+
     }
 
     fun getUserList(): List<Member> = memberRepository.findAll()
 
-    fun getUser(studentId: String): Member? {
-
-        val member: Optional<Member> = memberRepository.findByStudentID(studentId)
-
-        if (member.isEmpty) {
-            println("null?")
-        }
-        return member.orElse(null)
-    }
+    fun getUser(studentId: String): Member? =  memberRepository.findByStudentID(studentId)
 
 
 }
