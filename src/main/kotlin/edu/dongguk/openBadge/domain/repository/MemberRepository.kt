@@ -8,5 +8,5 @@ interface MemberRepository : JpaRepository<Member,Long> {
 
     fun findByStudentID(
             studentId: String?
-    ) : Optional<Member>
+    ) : Member?
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*
 class UserController(
         val memberService: MemberService
 ) {
-
     @GetMapping
     fun getUserList(): List<Member> = memberService.getUserList()
 

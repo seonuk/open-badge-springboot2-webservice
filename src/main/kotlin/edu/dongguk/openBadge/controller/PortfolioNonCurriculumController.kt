@@ -1,8 +1,10 @@
 package edu.dongguk.openBadge.controller
 
 import edu.dongguk.openBadge.DTOS.NonCurriculumDTO
+import edu.dongguk.openBadge.domain.repository.CustomUser
 import edu.dongguk.openBadge.domain.repository.NonCurriculum
 import edu.dongguk.openBadge.service.PortfolioNonCurriculumService
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 
@@ -22,14 +24,17 @@ class PortfolioNonCurriculumController(
 
         @PostMapping("/create")
         fun createNoncurriculumActivity(
-                nonCurriculumDTO: NonCurriculumDTO
-        ): NonCurriculum = nonCurriculumService.postNonCurriculumActivity(nonCurriculumDTO)
+                nonCurriculumDTO: NonCurriculumDTO,
+                @AuthenticationPrincipal
+                customUser: CustomUser
+        ): NonCurriculum = nonCurriculumService.postNonCurriculumActivity(nonCurriculumDTO, customUser)
 
         @PutMapping("/modify/{nonCurriculumId}")
         fun modifyNonCurriculum(
                 @PathVariable
                 nonCurriculumId: Long,
                 nonCurriculumDTO: NonCurriculumDTO
+
         ): NonCurriculum? = nonCurriculumService.modifyNonCurriculumActivity(nonCurriculumId, nonCurriculumDTO)
 
         @DeleteMapping("/delete/{nonCurriculumId}")
