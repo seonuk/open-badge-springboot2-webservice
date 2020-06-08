@@ -19,13 +19,14 @@ class Member(
         val major: String? = null,
         @Column(nullable = false)
         val grade: String? = null,
-        @OneToMany(mappedBy = "user")
-        @JsonManagedReference
-        var curriculumActivity: MutableList<Curriculum>? = null,
 
         @OneToMany(mappedBy = "user")
         @JsonManagedReference
-        var noncurriculmActivity: MutableList<NonCurriculum>? = null
+        val curriculumActivity: MutableList<Curriculum>? = null,
+
+        @OneToMany(mappedBy = "user")
+        @JsonManagedReference
+        val noncurriculmActivity: MutableList<NonCurriculum>? = null
 ) {
         fun updatePassword(password: String?) {
                 this.password = password
