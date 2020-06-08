@@ -21,7 +21,6 @@ class PortfolioCurriculumController(
     fun getAllCurriculum(
     ) : List<Curriculum> {
 
-
         return  portfolioCurriculumService.getCurriculumActivities()
     }
 

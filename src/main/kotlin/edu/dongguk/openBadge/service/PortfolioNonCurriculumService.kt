@@ -16,40 +16,48 @@ import javax.servlet.ServletContext
 class PortfolioNonCurriculumService(
         private val nonCurriculumRepository: NonCurriculumRepository,
         private val memberRepository: MemberRepository,
-        private val servletContext: ServletContext
+        private val fileRepository: FileRepository
 ) {
     fun getNonCurriculumActivities(): List<NonCurriculum> = nonCurriculumRepository.findAll()
 
+    @Transactional
     fun postNonCurriculumActivity(
             nonCurriculumDTO: NonCurriculumDTO,
             customUser: CustomUser
     ): NonCurriculum {
-
         val studentId: String? = customUser.studentID
+        val user: Member? = memberRepository.findByStudentID(customUser.studentID)
+        val nonCurriculum: NonCurriculum = nonCurriculumDTO.toEntity()
 
-        if (!nonCurriculumDTO.files.isNullOrEmpty()) {
-            for (file in nonCurriculumDTO.files!!) {
+        user?.let{ nonCurriculum.mappingUser(it) } ?: throw Exception()
+
+        nonCurriculumDTO.files?.let {
+            for (file in it) {
                 val d: Date = Date()
-                val fileName: String? = file.originalFilename + d.time
-                val uploadPath: String = "/Users/seonuk/Downloads/openBadge/src/main/resources/uploads/"+customUser.studentID
+                val fileName: String? = file.originalFilename
+                val uploadPath: String = "/Users/seonuk/Downloads/openBadge/src/main/resources/uploads/" + customUser.studentID
                 val f: File = File(uploadPath)
 
                 if (!f.exists()) {
                     f.mkdir()
                 }
 
+                val path: String = uploadPath + "/" + fileName + d.time
+                val userFile: UserFile = UserFile(
+                        fileName = fileName,
+                        filePath = path,
+                        nonCurriculum = nonCurriculum
+                )
+                fileRepository.save(userFile)
+
                 if (!fileName.isNullOrBlank()){
-                    file.transferTo(File(uploadPath + "/" + fileName))
+                    file.transferTo(File(path))
                 }
             }
         }
 
-        val user: Member? = memberRepository.findByStudentID(customUser.studentID)
 
-        val nonCurriculum: NonCurriculum = nonCurriculumDTO.toEntity()
-        user?.let{ nonCurriculum.mappingUser(it) } ?: throw Exception()
 
-        nonCurriculum.mappingUser(user)
 
         return nonCurriculumRepository.save(nonCurriculum)
     }
