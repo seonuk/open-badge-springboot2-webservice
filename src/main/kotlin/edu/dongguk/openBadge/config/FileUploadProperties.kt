@@ -6,7 +6,5 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "file")
 class FileUploadProperties(
-        val uploadDir: String? = null
-) {
-
-}
+    val uploadDir: String? = null
+)

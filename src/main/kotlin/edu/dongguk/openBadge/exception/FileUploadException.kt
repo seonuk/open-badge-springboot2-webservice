@@ -1,7 +1,7 @@
-//package edu.dongguk.openBadge.exception
+// package edu.dongguk.openBadge.exception
 //
-//import java.lang.RuntimeException
+// import java.lang.RuntimeException
 //
-//class FileUploadExcepton(: RuntimeException() {
+// class FileUploadExcepton(: RuntimeException() {
 //
-//}
+// }

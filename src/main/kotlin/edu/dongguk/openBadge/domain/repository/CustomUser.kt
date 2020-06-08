@@ -2,15 +2,14 @@ package edu.dongguk.openBadge.domain.repository
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import javax.persistence.Column
 
 data class CustomUser(
-        val studentID: String?,
-        val pw: String?,
-        val name: String?,
-        val major: String?,
-        val grade: String?,
-        val authorities: ArrayList<GrantedAuthority>
+    val studentID: String?,
+    val pw: String?,
+    val name: String?,
+    val major: String?,
+    val grade: String?,
+    val authorities: ArrayList<GrantedAuthority>
 ) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -32,5 +31,4 @@ data class CustomUser(
 //    grade: String?
 //    )
 //
-
 }
