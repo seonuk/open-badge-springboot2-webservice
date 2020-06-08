@@ -3,56 +3,64 @@ package edu.dongguk.openBadge.domain.repository
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import edu.dongguk.openBadge.DTOS.NonCurriculumDTO
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 
 @Entity(name = "non_curriculum")
 class NonCurriculum(
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long? = null,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 
-        @Column(nullable = false)
-        var capability: String,
-        @Column(length = 500, nullable = false)
-        var activityName: String,
-        @Column(nullable = false)
-        var necessary: String,
-        @Column(nullable = false)
-        var level: String,
-        @Column(nullable = false)
-        var division: String,
-        @Column(nullable = false)
-        var format: String,
-        @Column(nullable = false)
-        var field: String,
-        @Column(nullable = false)
-        var content: String,
-        @Column(nullable = false)
-        var start_day: String,
-        @Column(nullable = false)
-        var end_day: String,
-        @Column(nullable = false)
-        var total_time: Int,
-        @Column(nullable = false)
-        var participants: Int,
-        @Column(nullable = false)
-        var program_level: Int,
-        @Column(nullable = false)
-        var self_evaluation: Int,
-        @ManyToOne
-        @JoinColumn(name="user_id")
-        @JsonBackReference
-        var user: Member? = null,
+    @Column(nullable = false)
+    var capability: String,
+    @Column(length = 500, nullable = false)
+    var activityName: String,
+    @Column(nullable = false)
+    var necessary: String,
+    @Column(nullable = false)
+    var level: String,
+    @Column(nullable = false)
+    var division: String,
+    @Column(nullable = false)
+    var format: String,
+    @Column(nullable = false)
+    var field: String,
+    @Column(nullable = false)
+    var content: String,
+    @Column(nullable = false)
+    var start_day: String,
+    @Column(nullable = false)
+    var end_day: String,
+    @Column(nullable = false)
+    var total_time: Int,
+    @Column(nullable = false)
+    var participants: Int,
+    @Column(nullable = false)
+    var program_level: Int,
+    @Column(nullable = false)
+    var self_evaluation: Int,
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    var user: Member? = null,
 
-        @OneToMany(mappedBy = "nonCurriculum")
-        @JsonManagedReference
-        val files: MutableList<UserFile>? = null
+    @OneToMany(mappedBy = "nonCurriculum")
+    @JsonManagedReference
+    val files: MutableList<UserFile>? = null
 
 ) {
 
     fun mappingUser(user: Member?) {
         this.user = user
     }
+
     fun update(noncurriculumDTO: NonCurriculumDTO): NonCurriculum {
         this.capability = noncurriculumDTO.capability
         this.activityName = noncurriculumDTO.activityName
@@ -71,6 +79,4 @@ class NonCurriculum(
 
         return this
     }
-
-
 }
