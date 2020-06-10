@@ -16,7 +16,7 @@ class Member(
     @Column(length = 24, nullable = false)
     val studentID: String? = null,
     @Column(length = 100, nullable = false)
-    var password: String? = null,
+    val password: String? = null,
     @Column(length = 20, nullable = false)
     val name: String? = null,
     @Column(nullable = false)
@@ -31,8 +31,4 @@ class Member(
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     val noncurriculmActivity: MutableList<NonCurriculum>? = null
-) {
-    fun updatePassword(password: String?) {
-        this.password = password
-    }
-}
+)

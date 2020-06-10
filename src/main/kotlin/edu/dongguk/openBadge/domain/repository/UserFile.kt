@@ -21,5 +21,5 @@ class UserFile(
     @ManyToOne
     @JoinColumn(name = "noncurriculum_id")
     @JsonBackReference
-    var nonCurriculum: NonCurriculum? = null
+    val nonCurriculum: NonCurriculum? = null
 )

@@ -1,6 +1,6 @@
 package edu.dongguk.openBadge.controller
 
-import edu.dongguk.openBadge.DTOS.NonCurriculumDTO
+import edu.dongguk.openBadge.dtos.NonCurriculumDTO
 import edu.dongguk.openBadge.domain.repository.CustomUser
 import edu.dongguk.openBadge.domain.repository.NonCurriculum
 import edu.dongguk.openBadge.service.PortfolioNonCurriculumService
@@ -19,13 +19,18 @@ class PortfolioNonCurriculumController(
     private val nonCurriculumService: PortfolioNonCurriculumService
 ) {
     @GetMapping
-    fun getNoncurriculumActivities(): List<NonCurriculum> = nonCurriculumService.getNonCurriculumActivities()
+    fun getNoncurriculumActivities(
+        @AuthenticationPrincipal
+        customUser: CustomUser
+    ): List<NonCurriculum> = nonCurriculumService.getNonCurriculumActivities(customUser)
 
     @GetMapping("/{nonCurriculumId}")
     fun getOneNonCurriculum(
         @PathVariable
-        nonCurriculumId: Long
-    ): NonCurriculum? = nonCurriculumService.getOne(nonCurriculumId)
+        nonCurriculumId: Long,
+        @AuthenticationPrincipal
+        customUser: CustomUser
+    ): NonCurriculum = nonCurriculumService.getOne(nonCurriculumId, customUser)
 
     @PostMapping("/create")
     fun createNoncurriculumActivity(
@@ -38,13 +43,16 @@ class PortfolioNonCurriculumController(
     fun modifyNonCurriculum(
         @PathVariable
         nonCurriculumId: Long,
+        @AuthenticationPrincipal
+        customUser: CustomUser,
         nonCurriculumDTO: NonCurriculumDTO
-
-    ): NonCurriculum? = nonCurriculumService.modifyNonCurriculumActivity(nonCurriculumId, nonCurriculumDTO)
+    ): NonCurriculum = nonCurriculumService.modifyNonCurriculumActivity(nonCurriculumId, nonCurriculumDTO, customUser)
 
     @DeleteMapping("/delete/{nonCurriculumId}")
     fun deleteNonCurriculum(
         @PathVariable
-        nonCurriculumId: Long
-    ): Unit = nonCurriculumService.deleteNonCurriculumActivity(nonCurriculumId)
+        nonCurriculumId: Long,
+        @AuthenticationPrincipal
+        customUser: CustomUser
+    ): Unit = nonCurriculumService.deleteNonCurriculumActivity(nonCurriculumId, customUser)
 }

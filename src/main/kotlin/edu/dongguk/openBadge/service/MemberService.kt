@@ -1,6 +1,6 @@
 package edu.dongguk.openBadge.service
 
-import edu.dongguk.openBadge.DTOS.MemberDTO
+import edu.dongguk.openBadge.dtos.MemberDTO
 import edu.dongguk.openBadge.domain.Role
 import edu.dongguk.openBadge.domain.repository.CustomUser
 import edu.dongguk.openBadge.domain.repository.Member
@@ -16,32 +16,37 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MemberService(
-    val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository
 ) : UserDetailsService {
+    @Transactional
+    fun joinUser(memberDTO: MemberDTO): Member {
+        val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
 
-    fun todo() {
-        TODO("패스워드 변경")
+        val member: Member = memberDTO.copy(
+            password = passwordEncoder.encode(memberDTO.password)
+        ).toEntity()
+
+        val users = memberRepository.findAll()
+
+        for (user in users) {
+            if (user.studentID == memberDTO.studentID) {
+                throw Exception() // 중복 예외
+            }
+        }
+
+        return memberRepository.save(member)
     }
 
     @Transactional
-    fun joinUser(memberDTO: MemberDTO): Long? {
+    fun modifyPassword(memberDTO: MemberDTO, id: Long, customUser: CustomUser): Member {
         val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
 
-        memberDTO.password = passwordEncoder.encode(memberDTO.password)
+        val member: Member = memberDTO.copy(
+            id = id,
+            password = passwordEncoder.encode(memberDTO.password)
+        ).toEntity()
 
-        // 중복 방지
-
-        return memberRepository.save(memberDTO.toEntity()).id
-    }
-
-    @Transactional
-    fun modifyPassword(studentId: Long, passWord: String): Long? {
-        val member: Member = memberRepository.getOne(studentId)
-        val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
-
-        member.updatePassword(passwordEncoder.encode(passWord))
-
-        return memberRepository.save(member).id
+        return memberRepository.save(member)
     }
 
     override fun loadUserByUsername(studentId: String?): UserDetails {

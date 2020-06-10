@@ -1,8 +1,10 @@
 package edu.dongguk.openBadge.controller
 
-import edu.dongguk.openBadge.DTOS.MemberDTO
+import edu.dongguk.openBadge.domain.repository.CustomUser
+import edu.dongguk.openBadge.dtos.MemberDTO
 import edu.dongguk.openBadge.domain.repository.Member
 import edu.dongguk.openBadge.service.MemberService
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,13 +31,15 @@ class UserController(
     fun createUser(
         @RequestBody
         memberDTO: MemberDTO
-    ): Long? = memberService.joinUser(memberDTO)
+    ): Member = memberService.joinUser(memberDTO)
 
-    @PutMapping("/modify/{studentId}")
+    @PutMapping("/modify/{id}")
     fun modifyPassword(
-        @PathVariable
-        studentId: Long,
         @RequestBody
-        passWord: String
-    ): Long? = memberService.modifyPassword(studentId, passWord)
+        memberDTO: MemberDTO,
+        @PathVariable
+        id: Long,
+        @AuthenticationPrincipal
+        customUser: CustomUser
+    ): Member = memberService.modifyPassword(memberDTO, id, customUser)
 }
