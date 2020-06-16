@@ -2,19 +2,19 @@ package edu.dongguk.openBadge.service
 
 import edu.dongguk.openBadge.dtos.NonCurriculumDTO
 import edu.dongguk.openBadge.domain.repository.CustomUser
-import edu.dongguk.openBadge.domain.repository.FileRepository
 import edu.dongguk.openBadge.domain.repository.Member
 import edu.dongguk.openBadge.domain.repository.MemberRepository
 import edu.dongguk.openBadge.domain.repository.NonCurriculum
 import edu.dongguk.openBadge.domain.repository.NonCurriculumRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 
 @Service
 class PortfolioNonCurriculumService(
     private val nonCurriculumRepository: NonCurriculumRepository,
     private val memberRepository: MemberRepository,
-    private val fileRepository: FileRepository
+    private val fileUploadDownloadService: FileUploadDownloadService
 ) {
     fun getNonCurriculumActivities(customUser: CustomUser): List<NonCurriculum> {
         val member: Member? = memberRepository.findByStudentID(customUser.studentID)
@@ -39,14 +39,22 @@ class PortfolioNonCurriculumService(
     @Transactional
     fun postNonCurriculumActivity(
         nonCurriculumDTO: NonCurriculumDTO,
-        customUser: CustomUser
+        customUser: CustomUser,
+        file: List<MultipartFile>?
     ): NonCurriculum {
-        val studentId: String? = customUser.studentID
+        val studentId: String = customUser.studentID!!
         val user: Member? = memberRepository.findByStudentID(customUser.studentID)
 
         val nonCurriculum: NonCurriculum = user
             ?.let { nonCurriculumDTO.toEntity(member = it) } ?: throw Exception() // NotFindUserException
         // file uploads logic
+
+        if (!file.isNullOrEmpty()) {
+            file?.map { file -> fileUploadDownloadService.storeFile(file, studentId, nonCurriculum) }
+        } else {
+            println("file is empty")
+        }
+
         try {
             return nonCurriculumRepository.save(nonCurriculum)
         } catch (e: Exception) {
