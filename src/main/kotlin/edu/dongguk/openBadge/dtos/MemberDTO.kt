@@ -1,5 +1,6 @@
 package edu.dongguk.openBadge.dtos
 
+import edu.dongguk.openBadge.domain.Role
 import edu.dongguk.openBadge.domain.repository.Member
 
 data class MemberDTO(
@@ -8,7 +9,8 @@ data class MemberDTO(
     val name: String? = null,
     val password: String? = null,
     val major: String? = null,
-    val grade: String? = null
+    val grade: String? = null,
+    val authority: String? = null
 ) {
 
     fun toEntity(): Member = Member(
@@ -17,6 +19,7 @@ data class MemberDTO(
         name = this.name,
         password = this.password,
         major = this.major,
-        grade = this.grade
+        grade = this.grade,
+        authority = Role.MEMBER
     )
 }
