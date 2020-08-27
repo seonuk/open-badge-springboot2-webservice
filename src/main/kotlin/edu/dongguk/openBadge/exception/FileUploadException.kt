@@ -2,6 +2,7 @@
 //
 // import java.lang.RuntimeException
 //
-// class FileUploadExcepton(: RuntimeException() {
+// class FileUploadExcepton(
+//     val message: String,
+// )
 //
-// }

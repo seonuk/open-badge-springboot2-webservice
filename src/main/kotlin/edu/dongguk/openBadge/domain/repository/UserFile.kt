@@ -15,7 +15,6 @@ class UserFile(
 
     val fileName: String? = null,
     val fileDownloadURI: String? = null,
-    val fileType: String? = null,
     val fileSize: Long? = null,
 
     @ManyToOne

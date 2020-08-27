@@ -2,7 +2,6 @@ package edu.dongguk.openBadge.dtos
 
 import edu.dongguk.openBadge.domain.repository.Member
 import edu.dongguk.openBadge.domain.repository.NonCurriculum
-import org.springframework.web.multipart.MultipartFile
 
 data class NonCurriculumDTO(
     val id: Long? = null,
@@ -19,8 +18,7 @@ data class NonCurriculumDTO(
     val totalTime: Int,
     val participants: Int,
     val programLevel: Int,
-    val selfEvaluation: Int,
-    val files: List<MultipartFile>?
+    val selfEvaluation: Int
 ) {
 
     fun toEntity(member: Member): NonCurriculum = NonCurriculum(

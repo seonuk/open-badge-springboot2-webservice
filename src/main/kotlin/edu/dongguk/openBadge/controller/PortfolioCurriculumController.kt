@@ -3,6 +3,7 @@ package edu.dongguk.openBadge.controller
 import edu.dongguk.openBadge.dtos.CurriculumDTO
 import edu.dongguk.openBadge.domain.repository.Curriculum
 import edu.dongguk.openBadge.domain.repository.CustomUser
+import edu.dongguk.openBadge.exception.InternalServerException
 import edu.dongguk.openBadge.service.PortfolioCurriculumService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -19,6 +20,11 @@ import org.springframework.web.bind.annotation.RestController
 class PortfolioCurriculumController(
     private val portfolioCurriculumService: PortfolioCurriculumService
 ) {
+
+    @GetMapping("/error")
+    fun error() {
+        throw InternalServerException("Internal Error", 101)
+    }
 
     @GetMapping("")
     fun getAllCurriculum(

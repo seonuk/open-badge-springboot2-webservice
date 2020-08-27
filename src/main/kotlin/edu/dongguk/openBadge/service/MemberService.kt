@@ -1,10 +1,10 @@
 package edu.dongguk.openBadge.service
 
 import edu.dongguk.openBadge.dtos.MemberDTO
-import edu.dongguk.openBadge.domain.Role
 import edu.dongguk.openBadge.domain.repository.CustomUser
 import edu.dongguk.openBadge.domain.repository.Member
 import edu.dongguk.openBadge.domain.repository.MemberRepository
+import edu.dongguk.openBadge.exception.InternalServerException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -30,7 +30,7 @@ class MemberService(
 
         for (user in users) {
             if (user.studentID == memberDTO.studentID) {
-                throw Exception() // 중복 예외
+                throw InternalServerException("duplicate User : ${user.studentID}", 101) // 중복 예외
             }
         }
 
@@ -50,26 +50,21 @@ class MemberService(
     }
 
     override fun loadUserByUsername(studentId: String?): UserDetails {
-        val user: Member? = memberRepository.findByStudentID(studentId)
+        val user: Member = memberRepository.findByStudentID(studentId)
+            ?: throw InternalServerException("Not Found User", 102) // not found user Exception
 
         val authorities: ArrayList<GrantedAuthority> = ArrayList<GrantedAuthority>()
 
-        if ("admin@example.com" == studentId) {
-            authorities.add(SimpleGrantedAuthority(Role.ADMIN.role))
-        } else {
-            authorities.add(SimpleGrantedAuthority(Role.MEMBER.role))
-        }
+        authorities.add(SimpleGrantedAuthority(user.authority.name))
 
-        return user?.let {
-            CustomUser(
-                studentID = it.studentID,
-                pw = it.password,
+        return CustomUser(
+                studentID = user.studentID,
+                pw = user.password,
                 authorities = authorities,
-                grade = it.grade,
-                name = it.name,
-                major = it.major
+                grade = user.grade,
+                name = user.name,
+                major = user.major
             )
-        } ?: throw Exception()
     }
 
     fun getUserList(): List<Member> = memberRepository.findAll()

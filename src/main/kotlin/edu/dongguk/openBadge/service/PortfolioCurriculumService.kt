@@ -6,6 +6,7 @@ import edu.dongguk.openBadge.domain.repository.CurriculumRepository
 import edu.dongguk.openBadge.domain.repository.CustomUser
 import edu.dongguk.openBadge.domain.repository.Member
 import edu.dongguk.openBadge.domain.repository.MemberRepository
+import edu.dongguk.openBadge.exception.InternalServerException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,22 +16,22 @@ class PortfolioCurriculumService(
     private val memberRepository: MemberRepository
 ) {
     fun getCurriculumActivities(customUser: CustomUser): List<Curriculum> {
-        val member: Member? = memberRepository.findByStudentID(customUser.studentID)
+        val member: Member = memberRepository.findByStudentID(customUser.studentID)
+            ?: throw InternalServerException("Not Found User", 101) // NotFoundUserException
 
         // if don't have curriculumList, return []
-        return member?.let { curriculumRepository.findAllByUser(it) } ?: throw Exception() // NotFoundUserException
+        return curriculumRepository.findAllByUser(member)
     }
 
     fun getOne(
         curriculumId: Long,
         customUser: CustomUser
     ): Curriculum {
-        val member: Member? = memberRepository.findByStudentID(customUser.studentID)
+        val member: Member = memberRepository.findByStudentID(customUser.studentID)
+            ?: throw InternalServerException("Not Found User", 101) // NotFoundUserException
 
-        return member?.let {
-            curriculumRepository.findByIdAndUser(curriculumId, it)
-                ?: throw Exception() // NotFoundCurriculumException
-        } ?: throw Exception() // NotFoundUserException
+        return curriculumRepository.findByIdAndUser(curriculumId, member)
+                ?: throw InternalServerException("Not Found Curriculum", 103) // NotFoundCurriculumException
     }
 
     @Transactional
