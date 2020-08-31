@@ -43,6 +43,8 @@ dependencies {
     implementation("com.h2database:h2")
     implementation("org.springframework.boot:spring-boot-starter-security")
 
+    implementation("org.mariadb.jdbc:mariadb-java-client")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
