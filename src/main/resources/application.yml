@@ -1,0 +1,28 @@
+spring:
+    jpa:
+        hibernate:
+            ddl-auto: create
+        show-sql: true
+        properties:
+            hibernate.format_sql: true
+    h2:
+        console:
+            enabled: true
+    datasource:
+        hikari:
+            jdbc-url: jdbc:h2:mem:testdb
+            username: sa
+            password: 1234
+            driver-class-name: org.h2.Driver
+    servlet:
+        multipart:
+            enabled: true
+            max-file-size: 200MB
+            max-request-size: 215MB
+server:
+    port: 8080
+
+file:
+    upload-dir: ./src/main/resources/uploads
+
+

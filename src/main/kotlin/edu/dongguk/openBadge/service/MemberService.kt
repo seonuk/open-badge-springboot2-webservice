@@ -1,10 +1,10 @@
 package edu.dongguk.openBadge.service
 
-import edu.dongguk.openBadge.DTOS.MemberDTO
+import edu.dongguk.openBadge.dtos.MemberDTO
 import edu.dongguk.openBadge.domain.repository.CustomUser
-import edu.dongguk.openBadge.domain.Role
 import edu.dongguk.openBadge.domain.repository.Member
 import edu.dongguk.openBadge.domain.repository.MemberRepository
+import edu.dongguk.openBadge.exception.InternalServerException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -13,63 +13,61 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
-import kotlin.collections.ArrayList
 
 @Service
 class MemberService(
-        val memberRepository: MemberRepository
-) : UserDetailsService{
-
-    fun todo(){
-        TODO("패스워드 변경")
-    }
+    private val memberRepository: MemberRepository
+) : UserDetailsService {
     @Transactional
-    fun joinUser(memberDTO : MemberDTO) : Long? {
-        val passwordEncoder : PasswordEncoder = BCryptPasswordEncoder()
+    fun joinUser(memberDTO: MemberDTO): Member {
+        val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
 
-        memberDTO.password = passwordEncoder.encode(memberDTO.password)
+        val member: Member = memberDTO.copy(
+            password = passwordEncoder.encode(memberDTO.password)
+        ).toEntity()
 
-        //중복 방지
+        val users = memberRepository.findAll()
 
-        return memberRepository.save(memberDTO.toEntity()).id
+        for (user in users) {
+            if (user.studentID == memberDTO.studentID) {
+                throw InternalServerException("duplicate User : ${user.studentID}", 101) // 중복 예외
+            }
+        }
+
+        return memberRepository.save(member)
     }
 
     @Transactional
-    fun modifyPassword(studentId: Long, passWord: String): Long? {
-        val member: Member = memberRepository.getOne(studentId)
-        val passwordEncoder : PasswordEncoder = BCryptPasswordEncoder()
+    fun modifyPassword(memberDTO: MemberDTO, id: Long, customUser: CustomUser): Member {
+        val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
 
-        member.updatePassword(passwordEncoder.encode(passWord))
+        val member: Member = memberDTO.copy(
+            id = id,
+            password = passwordEncoder.encode(memberDTO.password)
+        ).toEntity()
 
-        return memberRepository.save(member).id
+        return memberRepository.save(member)
     }
 
-    override fun loadUserByUsername(studentId: String?): UserDetails{
-        val user: Member? = memberRepository.findByStudentID(studentId)
+    override fun loadUserByUsername(studentId: String?): UserDetails {
+        val user: Member = memberRepository.findByStudentID(studentId)
+            ?: throw InternalServerException("Not Found User", 102) // not found user Exception
 
         val authorities: ArrayList<GrantedAuthority> = ArrayList<GrantedAuthority>()
 
-        if ("admin@example.com" == studentId) {
-            authorities.add(SimpleGrantedAuthority(Role.ADMIN.role))
-        } else {
-            authorities.add(SimpleGrantedAuthority(Role.MEMBER.role))
-        }
+        authorities.add(SimpleGrantedAuthority(user.authority.name))
 
-        return user?.let { CustomUser(
-                studentID = it.studentID,
-                pw = it.password,
+        return CustomUser(
+                studentID = user.studentID,
+                pw = user.password,
                 authorities = authorities,
-                grade = it.grade,
-                name = it.name,
-                major = it.major
-        ) } ?: throw Exception()
-
+                grade = user.grade,
+                name = user.name,
+                major = user.major
+            )
     }
 
     fun getUserList(): List<Member> = memberRepository.findAll()
 
-    fun getUser(studentId: String): Member? =  memberRepository.findByStudentID(studentId)
-
-
+    fun getUser(studentId: String): Member? = memberRepository.findByStudentID(studentId)
 }

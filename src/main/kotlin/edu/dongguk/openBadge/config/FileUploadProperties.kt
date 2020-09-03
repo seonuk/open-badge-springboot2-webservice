@@ -1,12 +1,9 @@
 package edu.dongguk.openBadge.config
-
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Configuration
 
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "file")
-class FileUploadProperties(
-        val uploadDir: String? = null
-) {
-
-}
+data class FileUploadProperties(
+    val uploadDir: String = "./src/main/resources/uploads"
+)
