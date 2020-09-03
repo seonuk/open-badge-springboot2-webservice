@@ -49,4 +49,4 @@ deploy:
 notifications:
     email:
         recipients:
-            - "본인 이메일"
+            - "sunwook317@gmail.com"
