@@ -29,6 +29,18 @@ deploy:
       local_dir: deploy
       wait-until-deployed: true
 
+    - provider: codedeploy
+      access_key_id: $AWS_ACCESS_KEY
+      secret_access_key: $AWS_SECRET_KEY
+
+      bucket: springboot-davinci-build
+      key: springboot2-davinci-webservice.zip
+      bundle_type: zip
+      application: springboot2-davinci-webservice
+
+      deployment_group: springboot2-davinci-webservice
+      region: ap-northeast-2
+      wait-until-deployed: true
 
 notifications:
     email:
