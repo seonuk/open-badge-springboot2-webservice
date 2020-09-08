@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
@@ -25,7 +28,9 @@ class SecurityConfig(
     }
 
     override fun configure(http: HttpSecurity?) {
-        http?.csrf()?.disable()?.headers()?.frameOptions()?.disable()
+        http?.cors()
+            ?.and()
+            ?.csrf()?.disable()?.headers()?.frameOptions()?.disable()
             ?.and()
             ?.authorizeRequests()
             ?.antMatchers("/api/admin/user")
@@ -47,6 +52,19 @@ class SecurityConfig(
             ?.accessDeniedPage("/user/denied")
     }
 
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val configuration: CorsConfiguration = CorsConfiguration()
+        // - (3)
+        configuration.addAllowedOrigin("*")
+        configuration.addAllowedMethod("*")
+        configuration.addAllowedHeader("*")
+        configuration.setAllowCredentials(true)
+        configuration.setMaxAge(3600L)
+        val source: UrlBasedCorsConfigurationSource = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
+    }
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth?.userDetailsService(memberService)?.passwordEncoder(passwordEncoder())
     }
