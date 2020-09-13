@@ -44,6 +44,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
 
     implementation("org.mariadb.jdbc:mariadb-java-client")
+    implementation("com.auth0:java-jwt:3.1.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
