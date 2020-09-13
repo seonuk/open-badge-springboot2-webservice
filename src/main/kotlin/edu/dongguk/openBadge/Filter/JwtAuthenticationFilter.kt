@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm.HMAC512
 import com.fasterxml.jackson.databind.ObjectMapper
 import edu.dongguk.openBadge.JwtProperties
 import edu.dongguk.openBadge.domain.repository.CustomUser
-import edu.dongguk.openBadge.domain.repository.MemberRepository
 import edu.dongguk.openBadge.dtos.LoginViewModel
 import edu.dongguk.openBadge.exception.InternalServerException
 import org.springframework.security.authentication.AuthenticationManager
@@ -20,21 +19,20 @@ import javax.servlet.http.HttpServletResponse
 
 class JwtAuthenticationFilter(
     authenticationManage: AuthenticationManager,
-    val memberRepository: MemberRepository
+    private val JwtProperties: JwtProperties
 ) : UsernamePasswordAuthenticationFilter() {
 
     init {
-        setAuthenticationManager(authenticationManage)
+        authenticationManager = authenticationManage
     }
 
     override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication {
 
-        println("nonnull")
         val credential: LoginViewModel =
             ObjectMapper().readValue(request?.inputStream, LoginViewModel::class.java)
             ?: throw InternalServerException("Authentication Error", 101)
 
-        val authenticationToken: UsernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
+        val authenticationToken = UsernamePasswordAuthenticationToken(
             credential.userName,
             credential.password
         )
@@ -56,8 +54,8 @@ class JwtAuthenticationFilter(
 
         val token: String = JWT.create()
             .withSubject(principal.studentID)
-            .withExpiresAt(Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
-            .sign(HMAC512(JwtProperties.SECRET.toByteArray()))
+            .withExpiresAt(Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME!!))
+            .sign(HMAC512(JwtProperties.SECRET?.toByteArray()))
 
         response?.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + token)
     }

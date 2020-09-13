@@ -2,6 +2,7 @@ package edu.dongguk.openBadge.config
 
 import edu.dongguk.openBadge.Filter.JwtAuthenticationFilter
 import edu.dongguk.openBadge.Filter.JwtAuthorizationFilter
+import edu.dongguk.openBadge.JwtProperties
 import edu.dongguk.openBadge.domain.repository.MemberRepository
 import edu.dongguk.openBadge.service.MemberService
 import org.springframework.context.annotation.Bean
@@ -24,7 +25,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 class SecurityConfig(
     val memberRepository: MemberRepository,
-    val memberService: MemberService
+    val memberService: MemberService,
+    val JwtProperties: JwtProperties
 ) : WebSecurityConfigurerAdapter() {
 
     @Bean
@@ -40,8 +42,8 @@ class SecurityConfig(
         http.csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .addFilter(JwtAuthenticationFilter(authenticationManager(), memberRepository))
-            .addFilter(JwtAuthorizationFilter(authenticationManager(), memberRepository))
+            .addFilter(JwtAuthenticationFilter(authenticationManager(), JwtProperties))
+            .addFilter(JwtAuthorizationFilter(authenticationManager(), memberRepository, JwtProperties))
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/api/admin/user/create").permitAll()
             .antMatchers(HttpMethod.POST, "/login").permitAll()

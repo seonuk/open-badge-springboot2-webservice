@@ -18,14 +18,15 @@ import javax.servlet.http.HttpServletResponse
 
 class JwtAuthorizationFilter(
     authenticationManage: AuthenticationManager,
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val JwtProperties: JwtProperties
 ) : BasicAuthenticationFilter(authenticationManage) {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
 
         val header: String = request.getHeader(JwtProperties.HEADER_STRING)
 
-        if (!header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+        if (!header.startsWith(JwtProperties.TOKEN_PREFIX!!)) {
             chain.doFilter(request, response)
             return
         }
@@ -38,9 +39,9 @@ class JwtAuthorizationFilter(
 
     private fun getUsernamePasswordAuthentication(request: HttpServletRequest): Authentication {
         val studentId: String? = request.getHeader(JwtProperties.HEADER_STRING)?.let {
-            JWT.require(HMAC512(JwtProperties.SECRET.toByteArray()))
+            JWT.require(HMAC512(JwtProperties.SECRET?.toByteArray()))
                 .build()
-                .verify(it.replace(JwtProperties.TOKEN_PREFIX, ""))
+                .verify(it.replace(JwtProperties.TOKEN_PREFIX!!, ""))
                 .subject
         }
 

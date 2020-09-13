@@ -32,4 +32,3 @@ out/
 ### VS Code ###
 .vscode/
 
-/src/main/kotlin/edu/dongguk/openBadge/JwtProperties.kt

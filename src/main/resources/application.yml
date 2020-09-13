@@ -19,10 +19,18 @@ spring:
             enabled: true
             max-file-size: 200MB
             max-request-size: 215MB
+    profiles:
+        include: jwt
 server:
     port: 8080
 
 file:
     upload-dir: ./src/main/resources/uploads
+
+jwt:
+    SECRET: davinci
+    EXPIRATION_TIME: 86400000
+    TOKEN_PREFIX: Bearer
+    HEADER_STRING: Authorization
 
 
